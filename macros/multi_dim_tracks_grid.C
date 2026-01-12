@@ -51,7 +51,7 @@ bool is_two_thirds(float x, float tol = 1e-4);
 
 const UInt_t kNdims = 10;
 
-const Float_t kTrackCut = 60.; // cm
+//const Float_t kTrackCut = 60.; // cm
 
 const TString kTitles[kNdims] = { "x", "y", "z", "txz", "txy", "dqdx", "Q", "W", "G", "P"};
 
@@ -105,7 +105,10 @@ void multi_dim_tracks_grid(TString list_file, TString out_suffix, TString config
     while (issD >> vD) dim.push_back(vD);
 
 
-    //Float_t kTrackCut = env.GetValue("trkLCut", 60.0);
+    Float_t kTrackCut = env.GetValue("trkLCut", 60.0);
+    Float_t kTXWHighCut = env.GetValue("TXWHighCut", 90.0);
+    Int_t kMultCut = env.GetValue("MultCut", 1);
+    Float_t kGoodnessCut = env.GetValue("GoodnessCut", 100.0);
 
     std::cout << std::endl;    
     std::cout << "/---------------------------------------------------------------------------/" << std::endl;
@@ -123,7 +126,14 @@ void multi_dim_tracks_grid(TString list_file, TString out_suffix, TString config
     std::cout << "Pathological Hit Selection: " << pathological_sel << std::endl;
     std::cout << "Lifetime Calibration Selection: " << life_sel << std::endl;
     std::cout << "DEBUG: kNplanes " << kNplanes << std::endl;
-    std::cout << std::endl;    
+    std::cout << std::endl; 
+    std::cout << "Extra Cuts:" << std::endl;
+    std::cout << "TrackCut: " << kTrackCut << " cm" << std::endl;
+    std::cout << "TXWHighCut: " << kTXWHighCut << " degrees" << std::endl;
+    std::cout << "MultCut: > " << kMultCut << " hits are cut" << std::endl; 
+    std::cout << "GoodnessCut: > " << kGoodnessCut << " hits are cut" << std::endl; 
+    std::cout << std::endl; 
+   
     std::cout << "/---------------------------------------------------------------------------/" << std::endl;
     std::cout << std::endl;    
 
@@ -253,10 +263,10 @@ void multi_dim_tracks_grid(TString list_file, TString out_suffix, TString config
           if (!my.ontraj[ip][i]) continue;
 
           // goodness cut
-          if (my.goodness[ip][i] >= 100.) continue;
+          if (my.goodness[ip][i] >= kGoodnessCut) continue;
           
 	  // This may kill the "pathological" hits
-          if (my.mult[ip][i] > 1) continue;
+          if (my.mult[ip][i] > kMultCut) continue;
 
           // hit trains have widths in increments of exactly 0.5
           // skip hits from these
@@ -265,9 +275,13 @@ void multi_dim_tracks_grid(TString list_file, TString out_suffix, TString config
 	  // Angle code goes here!
 	  get_dir(trk_thxz, trk_thyz, my.tpc[ip][i], ip, *my.trk_dirx, *my.trk_diry, *my.trk_dirz);
 
-          // TODO NEW! High Angle Cut as of Nov 17 2025
-          //if (std::abs(trk_thxz) > 80) continue;
-       
+          // Cut out large tracks 
+          if (std::abs(trk_thxz) > kTXWHighCut) continue;
+     
+          // Remove Leakage Hits
+          if ( (my.x[ip][i] < 0) && (my.tpc[ip][i] == 1) ) continue;
+          if ( (my.x[ip][i] > 0) && (my.tpc[ip][i] == 0) ) continue;
+
           // TODO New! Geometrical Cut to alleviate affects related to support structures, etc.
           // For now let's try a 5 cm geometrical cut
           //if ((my.tpc[ip][i]) == 0 && (my.x[ip][i] < -195 || my.x[ip][i] > -5)) continue;
@@ -411,7 +425,7 @@ void multi_dim_tracks_grid(TString list_file, TString out_suffix, TString config
     }
    
     out_rootfile->Close();
-
+    std::cout << "Complete!" << std::endl;
 }
 
 
