@@ -60,9 +60,9 @@ BetheBloch *muon_BB = new BetheBloch(13); // setup for muons
 SCECorr *sce_corr_mc = new SCECorr(false);
 SCECorr *sce_corr_data = new SCECorr(true);
 YZCorr *yz_corr = new YZCorr();
-double lifetime = 100.; // mc default
+double lifetime = 35.; // mc default
 
-void multi_dim_tracks_grid(TString list_file, TString out_suffix, TString config
+void multi_dim_tracks_fallprod_grid(TString list_file, TString out_suffix, TString config
 
 ) {
 
@@ -173,7 +173,7 @@ void multi_dim_tracks_grid(TString list_file, TString out_suffix, TString config
    
     // YZ Calibration Initialization
     if (apply_yz) {
-      initialize_yz(yz_corr, isData);
+      initialize_yz_fallprod(yz_corr, isData);
       yz_corr -> ReadHistograms();
       std::cout << "DATA DEBUG: Initialized YZ" << std::endl;
     }
@@ -348,9 +348,9 @@ void multi_dim_tracks_grid(TString list_file, TString out_suffix, TString config
 	  }
 	  if (apply_yz) {
             // Should probably be careful about using this without SCE corrections
-            yz_q_corr = yz_corr -> GetYZCorr(sp_sce, ip);
+            //yz_q_corr = yz_corr -> GetYZCorr(sp_sce, ip);
             // Test if it should be 1/corr
-            //yz_q_corr = 1./yz_corr -> GetYZCorr(sp_sce, ip);
+            yz_q_corr = 1./yz_corr -> GetYZCorr(sp_sce, ip);
 
 	  }
 	  if (apply_elife) {

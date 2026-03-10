@@ -70,7 +70,7 @@ def run_grid(inputfiles):
     #cp_setup = "cp " + CALIB_WORKING_DIR + "/setup.sh " + MasterJobDir
     cp_setup = "cp " + WIREMOD_WORKING_DIR + "/setup_grid.sh " + MasterJobDir
     cp_BashColorSets = "cp -r " + CALIB_WORKING_DIR + "/bin " + MasterJobDir
-    cp_script = "cp " + WIREMOD_WORKING_DIR + "/macros/Merge/merge_hists_grid.C " + MasterJobDir
+    cp_script = "cp " + WIREMOD_WORKING_DIR + "/macros/merge_hists_grid.C " + MasterJobDir
     os.system(cp_include)
     os.system(cp_include2)
     os.system(cp_setup)

@@ -66,6 +66,20 @@ void initialize_yz(YZCorr *yz_corr, bool isData)
 
 }
 
+
+void initialize_yz_fallprod(YZCorr *yz_corr, bool isData) 
+
+{
+  //TString datapath = getenv("SBND_YZCORR_PATH");
+  //std::cout << "YZ Map Path " << datapath << std::endl;  
+  // Note: May need to update the maps in the future 
+  TString yz_corr_f = "yz_data2025_v10_14_02.root";
+  if(!isData) yz_corr_f = "yz_mc2025_v10_14_02.root";
+  yz_corr -> SetFileStr(yz_corr_f);
+
+}
+
+
 // Calibration Constant Correction
 float my_calib_const_corr(bool isData, int plane) 
 {
