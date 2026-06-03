@@ -83,6 +83,7 @@ void multi_dim_tracks_grid(TString list_file, TString out_suffix, TString config
     bool pathological_sel = env.GetValue("pathological_sel", false);
     bool life_sel = env.GetValue("life_sel", false);
     
+    bool corr_widths = env.GetValue("corr_widths", "false");
 
     std::istringstream issA(env.GetValue("Nbins", ""));
     std::vector<Int_t> Nbins;
@@ -387,7 +388,14 @@ void multi_dim_tracks_grid(TString list_file, TString out_suffix, TString config
 	    if (dim[v] == 4) dim_val = trk_thyz;
 	    if (dim[v] == 5) dim_val = dqdx_hit;
 	    if (dim[v] == 6) dim_val = my.integral[ip][i]*total_q_corr;
-	    if (dim[v] == 7) dim_val = my.width[ip][i];
+	    if (dim[v] == 7) {
+              if (corr_widths) {
+                dim_val = my.width[ip][i]/my.integral[ip][i]*total_q_corr;
+              }
+              else {
+                dim_val = my.width[ip][i];
+              }
+            }
 	    if (dim[v] == 8) dim_val = my.goodness[ip][i];
 	    if (dim[v] == 9) dim_val = PATHOLOGICAL;
             vals.push_back(dim_val);

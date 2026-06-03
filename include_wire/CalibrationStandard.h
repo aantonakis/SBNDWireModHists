@@ -24,6 +24,17 @@ const float calib_const_mc1 = 0.0202351;
 const float calib_const_mc2 = 0.0200727; 
 
 
+const float calib_const_gen2_mc0 = 0.02020;
+const float calib_const_gen2_mc1 = 0.02006;
+const float calib_const_gen2_mc2 = 0.02047; 
+
+
+const float calib_const_gen2_data0 = 0.02167; 
+const float calib_const_gen2_data1 = 0.02153; 
+const float calib_const_gen2_data2 = 0.02154;
+
+
+
 float my_calib_const_corr(bool isData, int plane);
 
 double dqdx_scale_correction_angle(double theta){
@@ -101,5 +112,28 @@ float my_calib_const_corr(bool isData, int plane)
   }
   return 1.;
 }
+
+// Calibration Constant Correction Gen2
+float my_calib_const_corr_gen2(bool isData, int plane) 
+{
+
+  if (isData) return 1.;
+
+  if (plane == 0) {
+    return calib_const_gen2_data0/calib_const_gen2_mc0;
+  }
+  else if (plane == 1) {
+    return calib_const_gen2_data1/calib_const_gen2_mc1;
+  }
+  else if (plane == 2) {
+    return calib_const_gen2_data2/calib_const_gen2_mc2;
+  }
+  else {
+    std::cout << "Invalid use of Calib Constant Correction!!!" << std::endl;
+    return 1.;
+  }
+  return 1.;
+}
+
 
 #endif

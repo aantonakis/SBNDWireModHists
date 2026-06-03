@@ -60,9 +60,9 @@ BetheBloch *muon_BB = new BetheBloch(13); // setup for muons
 SCECorr *sce_corr_mc = new SCECorr(false);
 SCECorr *sce_corr_data = new SCECorr(true);
 YZCorr *yz_corr = new YZCorr();
-double lifetime = 35.; // mc default
+double lifetime = 35.; // mc default --> Changed for gen2
 
-void multi_dim_tracks_fallprod_grid(TString list_file, TString out_suffix, TString config
+void multi_dim_tracks_gen2_grid(TString list_file, TString out_suffix, TString config
 
 ) {
 
@@ -367,7 +367,7 @@ void multi_dim_tracks_fallprod_grid(TString list_file, TString out_suffix, TStri
             } 
 	  }
           if (apply_recom) {
-            recom_q_corr = my_calib_const_corr(isData, ip);
+            recom_q_corr = my_calib_const_corr_gen2(isData, ip);
 	  }
 	  float total_q_corr = sce_q_corr * yz_q_corr * elife_q_corr * recom_q_corr;
                    
