@@ -3,8 +3,13 @@ export CALIB_WORKING_DIR=`pwd`
 export DATA_PATH=$CALIB_WORKING_DIR/data/
 export PLOT_PATH=$CALIB_WORKING_DIR/output/plots/
 export OUTPUTROOT_PATH=$CALIB_WORKING_DIR/output/root/
-export ROOT_INCLUDE_PATH=$ROOT_INCLUDE_PATH:$CALIB_WORKING_DIR/include/:$WIREMOD_WORKING_DIR/include_wire/
-#export ROOT_INCLUDE_PATH=$CALIB_WORKING_DIR/include/:$WIREMOD_WORKING_DIR/include/
+
+export SQLITE_DIR=/cvmfs/larsoft.opensciencegrid.org/spack-packages/opt/spack/linux-almalinux9-x86_64_v2/gcc-11.4.1/sqlite-3.43.2-y5xmyruw5xltll6osjkrlfla4bh5m7yj
+
+export ROOT_INCLUDE_PATH=$ROOT_INCLUDE_PATH:$CALIB_WORKING_DIR/include/:$WIREMOD_WORKING_DIR/include_wire/:$SQLITE_DIR/include
+
+#export ROOT_INCLUDE_PATH=$ROOT_INCLUDE_PATH:$CALIB_WORKING_DIR/include/:$WIREMOD_WORKING_DIR/include_wire/
+
 source $CALIB_WORKING_DIR/bin/BashColorSets.sh
 
 #####################################################################################
@@ -15,6 +20,7 @@ MY_OS_REL=$(cat /etc/os-release | grep ^NAME | sed -e 's/NAME=//g' -e 's/"//g')
 if [[ "$MY_OS_REL" == "AlmaLinux" && $(hostname) != *"dune-gpu01"* ]]; then
   source /cvmfs/larsoft.opensciencegrid.org/spack-v0.22.0-fermi/setup-env.sh
   spack load root@6.28.12 arch=linux-almalinux9-x86_64_v3
+  spack load sqlite@3.40.01.00 arch=linux-almalinux9-x86_64_v3
 elif [ "$MY_OS_REL" = "Scientific Linux" ]; then
 
   #Check if PRODUCTS is undefined -- if so, set up relevant ups area
@@ -34,6 +40,7 @@ elif [ "$MY_OS_REL" = "Scientific Linux" ]; then
   setup root v6_28_12 -q e26:p3915:prof 
   setup xrootd v5_5_5a -q e26:p3915:prof
   setup cmake v3_27_4
+  setup sqlite v3_40_01_00
 else
   echo "WARNING: Seems you are using a private machine to run this repo"
   echo "I do not automatically set up ROOT. If ROOT is already setup, it shoould be okay"

@@ -6,6 +6,10 @@
  * Option to apply different calibrations
  */
 
+//R__ADD_INCLUDE_PATH(/cvmfs/larsoft.opensciencegrid.org/spack-packages/opt/spack/linux-almalinux9-x86_64_v2/gcc-11.4.1/sqlite-3.43.2-y5xmyruw5xltll6osjkrlfla4bh5m7yj/include)
+//R__LOAD_LIBRARY(/cvmfs/larsoft.opensciencegrid.org/spack-packages/opt/spack/linux-almalinux9-x86_64_v2/gcc-11.4.1/sqlite-3.43.2-y5xmyruw5xltll6osjkrlfla4bh5m7yj/lib/libsqlite3.so)
+
+#include <sqlite3.h>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -218,6 +222,10 @@ void multi_dim_tracks_gen2_grid(TString list_file, TString out_suffix, TString c
 
     int track_idx = 0;
     while (my.reader.Next()) {
+      std::cout << std::endl;
+      std::cout << "Track Index " << track_idx << std::endl;
+      std::cout << std::endl;
+      std::cout << std::endl;
       track_idx++;
 
       // Only use anode-cathode crossers for Lifetime study
@@ -354,13 +362,19 @@ void multi_dim_tracks_gen2_grid(TString list_file, TString out_suffix, TString c
 
 	  }
 	  if (apply_elife) {
-	    if (isData) { 
+	    if (isData) {
+              double elife_temp = lifetime_gen2(my.tpc[ip][i], *my.run);
+              if (i < 5)
+                std::cout << "DataBase Lifetime: " << elife_temp << std::endl;
+    	      elife_q_corr = Lifetime_Correction(sp_sce.X(), elife_temp);
+              /*
 	      if (my.tpc[ip][i] == 0) {	
     	        elife_q_corr = Lifetime_Correction(sp_sce.X(), 35.);
 	      }
 	      else {
 	        elife_q_corr = Lifetime_Correction(sp_sce.X(), 35.);
 	      }
+              */
 	    }
 	    else {
 	      elife_q_corr = Lifetime_Correction(sp_sce.X(), lifetime);

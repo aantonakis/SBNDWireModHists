@@ -55,10 +55,22 @@ spack load ifdhc@2.6.20
 
 spack find root
 
+spack find sqlite
+
+spack load sqlite
+
+which root
+root-config --cflags
+spack location -i sqlite
+
 echo "@@ run"
 
-
 # dim = {x, y, z, txz, tyz, dq/dx, Q, width, goodness, pathological}
+#SQLITE_DIR=$(spack location -i sqlite)
+
+#root -l -b -q \
+#'gSystem->AddIncludePath("-I'"$SQLITE_DIR"'/include"); gSystem->Load("'"$SQLITE_DIR"'/lib/libsqlite3.so"); .L multi_dim_tracks_gen2_grid.C+'
+
 
 root -l -b -q "multi_dim_tracks_gen2_grid.C(\"input_list_${nProcess}.txt\", \"${nProcess}\", \"${config}\")" &> log_${nProcess}.log
 

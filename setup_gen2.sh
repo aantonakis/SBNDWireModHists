@@ -36,6 +36,7 @@ elif [ "$MY_OS_REL" = "Scientific Linux" ]; then
   setup xrootd v5_5_5a -q e26:p3915:prof
   setup cmake v3_27_4
   setup ifdhc
+  setup sqlite v3_40_01_00
 else
   echo "WARNING: Seems you are using a private machine to run this repo"
   echo "I do not automatically set up ROOT. If ROOT is already setup, it shoould be okay"

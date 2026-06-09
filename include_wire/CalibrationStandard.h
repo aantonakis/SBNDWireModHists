@@ -1,6 +1,7 @@
 #ifndef CALIBRATION_STANDARD_H
 #define CALIBRATION_STANDARD_H
 
+#include <sqlite3.h>
 #include <iostream>
 #include <fstream>
 #include "TFile.h"
@@ -133,6 +134,81 @@ float my_calib_const_corr_gen2(bool isData, int plane)
     return 1.;
   }
   return 1.;
+}
+
+
+// add a time-dependent lifetime correction for gen2
+double lifetime_gen2(int tpc, int run) 
+{
+
+  // TODO --> Move as a global variable?
+  std::string sbnd_data_v = "v01_41_00";
+
+  std::string db_file =
+        "/cvmfs/sbnd.opensciencegrid.org/products/sbnd/sbnd_data/"
+        + sbnd_data_v
+        + "/CalibrationDatabase/tpc_elifetime.db";
+
+  std::string table = "tpc_elifetime_data";
+
+  sqlite3* db = nullptr;
+
+  if (sqlite3_open(db_file.c_str(), &db) != SQLITE_OK) {
+    std::cerr << "Cannot open database: "
+              << sqlite3_errmsg(db) << std::endl;
+    return 35.;
+  }
+
+
+  std::string query =
+    "SELECT * FROM " + table +
+    " WHERE first_run_of_merged <= ?"
+    " AND last_run_of_merged >= ?";
+
+  //std::string query = "SELECT * FROM " + table;
+
+  sqlite3_stmt* stmt = nullptr;
+
+  if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+    std::cerr << "Failed to prepare query: "
+    << sqlite3_errmsg(db) << std::endl;
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return 35.;
+  }
+  sqlite3_bind_int(stmt, 1, run);
+  sqlite3_bind_int(stmt, 2, run);
+
+
+  if (sqlite3_step(stmt) == SQLITE_ROW) {
+    // read values
+    if (tpc == 0) {
+      double l_tmp = sqlite3_column_double(stmt, 5);
+      sqlite3_finalize(stmt);
+      sqlite3_close(db);
+      return l_tmp;
+    }
+    else if (tpc == 1) {
+      double l_tmp = sqlite3_column_double(stmt, 8);
+      sqlite3_finalize(stmt);
+      sqlite3_close(db);
+      return l_tmp;
+    }
+    else {
+      std::cerr << "No matching tpc found for run "
+                << run << std::endl;
+      sqlite3_finalize(stmt);
+      sqlite3_close(db);
+      return 35.;
+    }
+  } else {
+    std::cerr << "No matching run range found for run "
+              << run << std::endl;
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return 35.;
+  }
+
 }
 
 
