@@ -47,7 +47,7 @@ First, go into the `grid` top level directory. There you will find the grid subm
 
 * similarly, to run `multi_dim_tracks_gen2_grid.C`, do the following:
 
-````python submit_multi_dim_tracks_gen2.py -l <file_list> -o <output_tag> -c <config file> -nfile <# of files to process> -ngrid <# of grid jobs to run>```  
+```python submit_multi_dim_tracks_gen2.py -l <file_list> -o <output_tag> -c <config file> -nfile <# of files to process> -ngrid <# of grid jobs to run>```  
 
 
 These scripts will write the output files to the users scratch directory under: `/path-to-scratch/sbnd_calib/` 
