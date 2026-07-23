@@ -45,7 +45,7 @@ First, go into the `grid` top level directory. There you will find the grid subm
 ```python submit_multi_dim_tracks.py -l <file_list> -o <output_tag> -c <config file> -nfile <# of files to process> -ngrid <# of grid jobs to run>```
 
 
-* similarly, to run `multi_dim_tracks_gen2_grid.C, do the following:
+* similarly, to run `multi_dim_tracks_gen2_grid.C`, do the following:
 
 ````python submit_multi_dim_tracks_gen2.py -l <file_list> -o <output_tag> -c <config file> -nfile <# of files to process> -ngrid <# of grid jobs to run>```  
 
@@ -57,7 +57,11 @@ The directory will be created if it hasn't been yet and it will dump log files t
 
 ```python submit_merge_hists.py -l <file_list> -o <output_tag> -nfile <# of files to process> -ngrid <# of grid jobs to run>```
 
-In this case, the input file list is from the output of the histogram generation code and the number of grid jobs determines how many histograms are merged together. In other words, the number of grid jobs determines the number of output files, so the projected histograms from each batch of input files are merged together. The axes/dimensions to keep in the output histograms is configured in the script `grid/bin/grid_executable_merge_hists.sh`. The indices of the axes to keep are configured in the line `root -l -b -q "merge_hists_grid.C(\"input_list_${nProcess}.txt\", \"${nProcess}\", {0, 1, 2, 3, 4})" &> log_${nProcess}.log`, where  {0, 1, 2, 3, 4} correspond to the indices of the axes/dimensions to keep. This needs to be updated in the future to have a config file input like the other scripts.
+In this case, the input file list is from the output of the histogram generation code and the number of grid jobs determines how many histograms are merged together. In other words, the number of grid jobs determines the number of output files, so the projected histograms from each batch of input files are merged together. The axes/dimensions to keep in the output histograms is configured in the script `grid/bin/grid_executable_merge_hists.sh`. The indices of the axes to keep are configured in the line:
+
+```root -l -b -q "merge_hists_grid.C(\"input_list_${nProcess}.txt\", \"${nProcess}\", {0, 1, 2, 3, 4})" &> log_${nProcess}.log```, 
+
+where  {0, 1, 2, 3, 4} correspond to the indices of the axes/dimensions to keep. This needs to be updated in the future to have a config file input like the other scripts.
 
 
 
