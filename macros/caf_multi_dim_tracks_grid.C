@@ -107,6 +107,16 @@ void caf_multi_dim_tracks_grid(TString list_file, TString out_suffix, TString co
     Int_t kMultCut = env.GetValue("MultCut", 1);
     Float_t kGoodnessCut = env.GetValue("GoodnessCut", 100.0);
 
+
+
+    // CAF variable cut values
+    Float_t kNeutrinoScoreCut = env.GetValue("NeutrinoScoreCut", 0.1);
+    Float_t kTrackScoreCut = env.GetValue("TrackScoreCut", 0.5);
+    Float_t kChisMuonCut = env.GetValue("ChisMuonCut", 40.);
+    Float_t kChisProtonCut = env.GetValue("ChisProtonCut", 80.);
+    bool kProtonSel = env.GetValue("ProtonSel", true);
+
+
     std::cout << std::endl;    
     std::cout << "/---------------------------------------------------------------------------/" << std::endl;
     std::cout << std::endl;    
@@ -249,7 +259,7 @@ void caf_multi_dim_tracks_grid(TString list_file, TString out_suffix, TString co
 
             // Main cuts are the Track Score and cosnuvtx --> Fits take care of the rest 
 
-            if (pfp_info.pfp_trackScore[pfp] <= 0.5) continue;
+            if (pfp_info.pfp_trackScore[pfp] <= kTrackScoreCut) continue;
 
             int curr_slc = pfp_info.pfp_slcID[pfp];
             float nu_score = -1.;
@@ -259,7 +269,7 @@ void caf_multi_dim_tracks_grid(TString list_file, TString out_suffix, TString co
                 }     
             }
  
-            if (nu_score < 0.1) continue;
+            if (nu_score < kNeutrinoScoreCut) continue;
             
             std::vector<float> chi_muon_vec{pfp_info.trk_chis0_muon[pfp], pfp_info.trk_chis1_muon[pfp], pfp_info.trk_chis2_muon[pfp]};
             std::vector<float> chi_proton_vec{pfp_info.trk_chis0_proton[pfp], pfp_info.trk_chis1_proton[pfp], pfp_info.trk_chis2_proton[pfp]};
@@ -281,8 +291,15 @@ void caf_multi_dim_tracks_grid(TString list_file, TString out_suffix, TString co
             if (Nproton > 0) chi_proton_avg /= Nproton;
             if (Npion > 0) chi_pion_avg /= Npion;
 
-            // make a chis2 PID selection for protons
-            if (chi_muon_avg < 30 || chi_proton_avg > 100) continue;
+            // make a chis2 PID selection for protons or muons
+            
+            if (kProtonSel && (chi_muon_avg < kChisMuonCut || chi_proton_avg > kChisProtonCut)) continue;
+            if (!kProtonSel && (chi_muon_avg > kChisMuonCut || chi_proton_avg < kChisProtonCut)) continue;
+
+            if (kProtonSel)  std::cout << "Found a proton candidate! chis2_proton: " << chi_proton_avg << " chis_muon: " << chi_muon_avg << std::endl;
+            if (!kProtonSel) std::cout << "Found a muon candidate! chis2_proton: " << chi_proton_avg << " chis_muon: " << chi_muon_avg << std::endl;
+
+            //if (chi_muon_avg < 30 || chi_proton_avg > 100) continue;
 
             // Reset N-dimensional Track Counter
             for (unsigned i = 0; i < kNplanes * kNTPCs; i++) {
@@ -327,7 +344,7 @@ void caf_multi_dim_tracks_grid(TString list_file, TString out_suffix, TString co
 
                     unsigned IDX = plane + kNplanes * pfp_info.trk_calo_tpc[plane][icalo];
                     bool cut_pathological = false;
-	                try {
+	            try {
 	                    cut_pathological = txz_cut(trk_thxz, pfp_info.trk_calo_width[plane][icalo], IDX, isData); 
                     }
                     catch (const std::exception &e) {
@@ -335,7 +352,7 @@ void caf_multi_dim_tracks_grid(TString list_file, TString out_suffix, TString co
                         std::cerr << "Cut Pathological Error: " << e.what() << std::endl;
                     }
 
-	                if (cut_pathological) PATHOLOGICAL = 1.5;
+	            if (cut_pathological) PATHOLOGICAL = 1.5;
 	
 	                // Can remove pathological hits if needed
                     if ( (pathological_sel) && (cut_pathological) ) continue;	
@@ -358,7 +375,7 @@ void caf_multi_dim_tracks_grid(TString list_file, TString out_suffix, TString co
 	                    if (dim[v] == 8) dim_val = 1; // I don't have goodness for CAFs
 	                    if (dim[v] == 9) dim_val = PATHOLOGICAL;
                         vals.push_back(dim_val);
-	                }
+	            }
                     // select by TPC
                     unsigned hit_idx = plane + kNplanes * pfp_info.trk_calo_tpc[plane][icalo];
 

@@ -64,8 +64,14 @@ In this case, the input file list is from the output of the histogram generation
 where  {0, 1, 2, 3, 4} correspond to the indices of the axes/dimensions to keep. This needs to be updated in the future to have a config file input like the other scripts.
 
 
+In addition to the modules that analyze throughgoing cosmic muon tracks with the calibration ntuples, I also added a CAF analogue of submit_multi_dim_tracks_gen2.py script for using the track calorimetry to study protons. 
+
+* To run `caf_multi_dim_tracks_grid.C`, do the following:
+
+```python submit_caf_multi_dim_tracks.py -l <file_list> -o <output_tag> -c <config file> -nfile <# of files to process> -ngrid <# of grid jobs to run>```
 
 
+The same type of configs are passed to this module, but there are also CAF variables for selections such as the chi2 pid variables
 
 
 
