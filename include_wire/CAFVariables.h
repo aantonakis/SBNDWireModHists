@@ -260,7 +260,7 @@ public:
 	static const int kMaxCaloPoints = 10000;
 
 	std::array<std::string, kCaloPlaneCount> trk_calo_points_length_str;
-	std::array<Float_t*, kCaloPlaneCount> trk_calo_points_length;
+	std::array<Int_t*, kCaloPlaneCount> trk_calo_points_length;
 
 	std::array<std::string, kCaloPlaneCount> trk_calo_points_totlength_str;
 	std::array<Int_t, kCaloPlaneCount> trk_calo_points_totlength;
@@ -303,10 +303,10 @@ public:
 	  for (int plane = 0; plane < kCaloPlaneCount; ++plane) {
 	    const std::string prefix = calo_tag + std::to_string(plane);
 
-	    trk_calo_points_length_str[plane] = prefix + "..length";
-	    trk_calo_points_length[plane] = new Float_t[pfp_length];
+	    trk_calo_points_length_str[plane] = prefix + ".points..length";
+	    trk_calo_points_length[plane] = new Int_t[pfp_length];
 
-	    trk_calo_points_totlength_str[plane] = prefix + "..totarraysize";
+	    trk_calo_points_totlength_str[plane] = prefix + ".points..totarraysize";
 	    trk_calo_points_totlength[plane] = kMaxCaloPoints;
 
 	    trk_calo_dQdx_str[plane] = prefix + ".points.dqdx";
