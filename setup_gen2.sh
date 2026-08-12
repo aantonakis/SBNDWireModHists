@@ -1,9 +1,9 @@
 #export WIREMOD_WORKING_DIR="/exp/sbnd/app/users/aantonak/WireModProd/SBNDWireModAna"
 export WIREMOD_WORKING_DIR=`pwd`
 export CALIB_WORKING_DIR="/exp/sbnd/app/users/aantonak/SBND_calib_recom"
-export DATA_PATH=$CALIB_WORKING_DIR/data/
-export PLOT_PATH=$CALIB_WORKING_DIR/output/plots/
-export OUTPUTROOT_PATH=$CALIB_WORKING_DIR/output/root/
+export DATA_PATH=$WIREMOD_WORKING_DIR/data/
+export PLOT_PATH=$WIREMOD_WORKING_DIR/output/plots/
+export OUTPUTROOT_PATH=$WIREMOD_WORKING_DIR/output/root/
 export ROOT_INCLUDE_PATH=$ROOT_INCLUDE_PATH:$CALIB_WORKING_DIR/include/:$WIREMOD_WORKING_DIR/include_wire/
 #export ROOT_INCLUDE_PATH=$CALIB_WORKING_DIR/include/:$WIREMOD_WORKING_DIR/include/
 source $CALIB_WORKING_DIR/bin/BashColorSets.sh
@@ -52,10 +52,14 @@ fi
 export SAMPLE_PATH=$DATA_PATH/sample_list/sungbinosx/
 if [[ `hostname` == *"sbnd"* || `hostname` == *"$USER"* ]]; then
     source /cvmfs/larsoft.opensciencegrid.org/spack-packages/setup-env.sh
-    export SAMPLE_PATH=$DATA_PATH/sample_list/sbndgpvm/
+    #export SAMPLE_PATH=$DATA_PATH/sample_list/sbndgpvm/
+    export SAMPLE_PATH=$DATA_PATH
     export SBND_DATA_PATH=/cvmfs/sbnd.opensciencegrid.org/products/sbnd/sbnd_data/
     #export SBNDDATA_VERSION=v01_28_00
-    export SBNDDATA_VERSION=v01_30_00
+    #export SBNDDATA_VERSION=v01_30_00
+
+    # sbnd_data for gen2
+    export SBNDDATA_VERSION=v01_42_00
 
     #export SBND_YZCORR_PATH=/exp/sbnd/app/users/yadav/Calibration/sbndcode_v10_06_01/sbnd_data/v01_33_00/YZmaps/
     export SBND_YZCORR_PATH=/exp/sbnd/app/users/yadav/Calibration/YZ_X_Calib/Median/split_macros/output_files/2026Janfallprod_maps/

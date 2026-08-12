@@ -184,6 +184,8 @@ void multi_dim_tracks_gen2_grid(TString list_file, TString out_suffix, TString c
 
     TH1::AddDirectory(0);
  
+    //TH2D* h2D_debug = new TH2D("h2D_debug", "", 36, -90, 90, 36, -90, 90);
+
     // 1 hist per plane per TPC. We also keep track of the number of tracks in
     // each eventual projection bin using TH2Is
     THnSparseD* h[kNplanes * kNTPCs];
@@ -391,7 +393,10 @@ void multi_dim_tracks_gen2_grid(TString list_file, TString out_suffix, TString c
           vals.reserve(dim.size());
 
           float dqdx_hit = my.dqdx[ip][i]*total_q_corr;
-
+          if (i < 5) {
+            std::cout << "Filling angles txw  " << trk_thxz << " tyz " << trk_thyz << std::endl;
+            std::cout << "Number of dim: " << dim.size() << std::endl;
+          }
           for (int v = 0; v < dim.size(); ++v) {
 	    double dim_val = 0;
 	    if (dim[v] == 0) dim_val = sp_sce.X();
@@ -406,7 +411,7 @@ void multi_dim_tracks_gen2_grid(TString list_file, TString out_suffix, TString c
 	    if (dim[v] == 9) dim_val = PATHOLOGICAL;
             vals.push_back(dim_val);
 	  }
-
+          //h2D_debug->Fill(trk_thxz, trk_thyz);
           // select by TPC
           unsigned hit_idx = ip + kNplanes * my.tpc[ip][i];
 
@@ -440,7 +445,7 @@ void multi_dim_tracks_gen2_grid(TString list_file, TString out_suffix, TString c
         h[i]->Write();
         hTracks[i]->Write();
     }
-   
+    //h2D_debug->Write();  
     out_rootfile->Close();
     std::cout << "Complete!" << std::endl;
 }
