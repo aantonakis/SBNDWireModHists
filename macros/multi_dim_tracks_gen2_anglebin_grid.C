@@ -380,9 +380,9 @@ void multi_dim_tracks_gen2_anglebin_grid(TString list_file, TString out_suffix, 
 	  }
 	  if (apply_yz) {
             // Should probably be careful about using this without SCE corrections
-            //yz_q_corr = yz_corr -> GetYZCorr(sp_sce, ip);
+            yz_q_corr = yz_corr -> GetYZCorr(sp_sce, ip);
             // Test if it should be 1/corr
-            yz_q_corr = 1./yz_corr -> GetYZCorr(sp_sce, ip);
+            //yz_q_corr = 1./yz_corr -> GetYZCorr(sp_sce, ip);
 
 	  }
 	  if (apply_elife) {

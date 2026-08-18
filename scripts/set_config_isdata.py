@@ -5,7 +5,8 @@ from pathlib import Path
 
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
-DEFAULT_GEN2_CONFIG_DIR = PROJECT_DIR.parent / "SBNDWireModHists" / "Configs" / "Gen2"
+#DEFAULT_GEN2_CONFIG_DIR = PROJECT_DIR.parent / "SBNDWireModHists" / "Configs" / "Gen2"
+DEFAULT_GEN2_CONFIG_DIR = PROJECT_DIR.parent / "WireModHists" / "Configs" / "Gen2"
 
 
 def parse_args() -> argparse.Namespace:
